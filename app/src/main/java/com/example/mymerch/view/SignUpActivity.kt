@@ -1,16 +1,33 @@
-package com.example.mymerch
+package com.example.mymerch.view
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,26 +40,48 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.mymerch.R
 import com.example.mymerch.ui.theme.BLUE
+import com.example.mymerch.viewmodel.SignUpViewModel
 
-class LoginActivity : ComponentActivity() {
+class SignUpActivity : ComponentActivity() {
+    private val signUpViewModel by viewModels<SignUpViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            LoginBody()
+            SignUpBody(
+                viewModel = signUpViewModel,
+                onSignInClicked = {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            })
         }
     }
 }
 
 @Composable
-fun LoginBody() {
+fun SignUpBody(viewModel: SignUpViewModel, onSignInClicked: () -> Unit) {
 
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
     val context = LocalContext.current
-    val activity = context as Activity
+
+    val signUpStatus by viewModel.signUpStatus.collectAsState()
+
+    LaunchedEffect(signUpStatus) {
+        signUpStatus?.let {
+            if (it.isSuccess) {
+                Toast.makeText(context, "Sign up successful", Toast.LENGTH_SHORT).show()
+                // Navigate to main screen or another destination
+            } else {
+                Toast.makeText(context, it.exceptionOrNull()?.message ?: "Sign up failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     Scaffold { padding ->
 
@@ -72,12 +111,24 @@ fun LoginBody() {
                 alignment = Alignment.Center
             )
 
+
+
             Spacer(modifier = Modifier.height(30.dp))
+
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Full Name") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Email") },
+//                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -95,33 +146,24 @@ fun LoginBody() {
 
             Button(
                 onClick = {
-                    // Login logic here
+                    viewModel.signUp(email, password)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Login")
+                Text("Sign Up")
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
 
             Text(buildAnnotatedString {
-                append("Don't have an account? ")
+                append("Already have an account? ")
 
                 withStyle(SpanStyle(color = BLUE)) {
-                    append("Sign Up")
+                    append("Sign In")
                 }
-
-                //            , modifier = Modifier.clickable{
-//                val intent = Intent(
-//                    context,
-//                    SignUpActivityActivity::class.java)
-//
-//                context.startActivity(intent)
-//                activity.finish()
-//            })
-
-
-            })
+            },
+                modifier = Modifier.clickable {
+                    onSignInClicked()
+                })
 
 
         }
@@ -130,6 +172,6 @@ fun LoginBody() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewLogin() {
-    LoginBody()
+fun PreviewSignup() {
+    SignUpBody(viewModel = SignUpViewModel(), onSignInClicked = {})
 }

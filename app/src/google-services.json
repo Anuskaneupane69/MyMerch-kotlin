@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "919519445562",
+    "firebase_url": "https://mymerch-e285a-default-rtdb.firebaseio.com",
+    "project_id": "mymerch-e285a",
+    "storage_bucket": "mymerch-e285a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919519445562:android:8aea7ab318956f2c312b03",
+        "android_client_info": {
+          "package_name": "com.example.mymerch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2Es1gNGqh6yDCG-swdDGnZBFfXjQmiAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

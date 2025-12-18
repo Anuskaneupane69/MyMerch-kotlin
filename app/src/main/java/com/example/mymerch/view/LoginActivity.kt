@@ -1,15 +1,12 @@
-package com.example.mymerch
+package com.example.mymerch.view
 
 import android.app.Activity
-import androidx.compose.foundation.Image
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,34 +16,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-//import androidx.compose.ui.text.input.KeyboardOptions
-//import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.mymerch.R
 import com.example.mymerch.ui.theme.BLUE
 
-class SignUpActivityActivity : ComponentActivity() {
+class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            SignUpBody()
+            LoginBody()
         }
     }
 }
 
 @Composable
-fun SignUpBody() {
+fun LoginBody() {
 
-    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-
-    val context= LocalContext.current
+    val context = LocalContext.current
     val activity = context as Activity
 
     Scaffold { padding ->
@@ -77,24 +71,12 @@ fun SignUpBody() {
                 alignment = Alignment.Center
             )
 
-
-
             Spacer(modifier = Modifier.height(30.dp))
-
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text("Full Name") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Email") },
-//                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -112,28 +94,32 @@ fun SignUpBody() {
 
             Button(
                 onClick = {
-                    // Signup logic here
+                    // Login logic here
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Sign Up")
+                Text("Login")
             }
 
+            Spacer(modifier = Modifier.height(12.dp))
 
             Text(buildAnnotatedString {
-                append("Already have an account? ")
+                append("Don't have an account? ")
 
                 withStyle(SpanStyle(color = BLUE)) {
-                    append("Sign In")
+                    append("Sign Up")
                 }
-            },
-                modifier = Modifier.clickable{
-                val intent = Intent(
-                    context,
-                    LoginActivity::class.java)
 
-                context.startActivity(intent)
-                activity.finish()
+                //            , modifier = Modifier.clickable{
+//                val intent = Intent(
+//                    context,
+//                    SignUpActivityActivity::class.java)
+//
+//                context.startActivity(intent)
+//                activity.finish()
+//            })
+
+
             })
 
 
@@ -143,7 +129,6 @@ fun SignUpBody() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewSignup() {
-    SignUpBody()
-    // wow
+fun PreviewLogin() {
+    LoginBody()
 }
